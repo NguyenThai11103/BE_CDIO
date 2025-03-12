@@ -66,7 +66,7 @@ class NhanVienController extends Controller
             return response()->json([
                 'status'    => 1,
                 'message'   => "Bạn đã đăng nhập thành công.",
-                'token'     => $check->createToken('token_nhan_vien')->plainTextToken,
+                'token'     => $check->createToken('token_khach_hang')->plainTextToken,
             ]);
         } else {
             return response()->json([

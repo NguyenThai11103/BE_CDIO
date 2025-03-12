@@ -16,8 +16,8 @@ class NhanVienSeeder extends Seeder
         DB::table('nhan_viens')->delete();
         DB::table('nhan_viens')->truncate();
         DB::table('nhan_viens')->insert([
-            'ho_va_ten'         => 'Nguyen Thai',
-            'email'             => 'kkdn011@gmail.com',
+            'ho_va_ten'         => 'Nguyễn Văn Nhân',
+            'email'             => 'vannhan130504@gmail.com',
             'password'          => 123456,
             'so_dien_thoai'     => '0909111222',
             'dia_chi'           => 'Quan 1, TP.HCM',
