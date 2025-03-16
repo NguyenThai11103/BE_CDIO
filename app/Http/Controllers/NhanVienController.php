@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\KhachHang;
 use App\Models\NhanVien;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,8 +61,8 @@ class NhanVienController extends Controller
     public function login(Request $request)
     {
         $check = NhanVien::where('email', $request->email)
-                         ->where('password', $request->password)
-                         ->first();
+            ->where('password', $request->password)
+            ->first();
         if ($check) {
             return response()->json([
                 'status'    => 1,
@@ -78,7 +79,7 @@ class NhanVienController extends Controller
     public function checkToken()
     {
         $user_login = Auth::guard('sanctum')->user();
-        if($user_login) {
+        if ($user_login) {
             return response()->json([
                 'status'    => 1,
                 'ho_ten'    => $user_login->ho_va_ten
@@ -89,5 +90,12 @@ class NhanVienController extends Controller
                 'message'   => 'Bạn cần đăng nhập hệ thống!'
             ]);
         }
+    }
+    public function getDataKhachHang()
+    {
+        $data = KhachHang::get();
+        return response()->json([
+            'data' => $data
+        ]);
     }
 }
