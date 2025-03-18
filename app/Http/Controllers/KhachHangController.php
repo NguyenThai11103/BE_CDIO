@@ -2,23 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\KhachHangDangKyRequest;
 use App\Models\KhachHang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Google_Client;
 use Illuminate\Support\Facades\DB;
 
 class KhachHangController extends Controller
 {
-    public function Login(Request $request)
+
+    public function login(Request $request)
     {
-        $check = KhachHang::where('email', $request->email)->first();
-        if ($check && Hash::check($request->password, $check->password)) {
+        $check = KhachHang::where('email', $request->email)
+                ->where('password', $request->password)
+                ->first();
+        if ($check) {
             return response()->json([
                 'status'    => 1,
                 'message'   => "Bạn đã đăng nhập thành công.",
-                'token'     => $check->createToken('token_nhan_vien')->plainTextToken,
+                'key'     => $check->createToken('key_khach_hang')->plainTextToken,
             ]);
         } else {
             return response()->json([
@@ -27,6 +30,8 @@ class KhachHangController extends Controller
             ]);
         }
     }
+
+
     public function checkToken()
     {
         $user_login = Auth::guard('sanctum')->user();
@@ -42,21 +47,29 @@ class KhachHangController extends Controller
             ]);
         }
     }
-    public function Register(Request $request){
-        $data = request()->validate([
-            'ho_va_ten' => 'required',
-            'email' => 'required|email|unique:khach_hangs,email',
-            'password' => 'required|min:6',
-            'ngay_sinh' => 'required',
-            'so_dien_thoai' => 'required',
-        ]);
-        $data['password'] = Hash::make($data['password']);
-        $khach_hang = KhachHang::create($data);
-        return response()->json([
-            'status' => 1,
-            'message' => 'Đăng ký tài khoản thành công!',
-            'token' => $khach_hang->createToken('token_khach_hang')->plainTextToken,
-        ]);
+    public function Register(KhachHangDangKyRequest $request)
+    {
+        $check = KhachHang::where('email', $request->email)->first();
+        if ($check) {
+            return response()->json([
+                'status'    => 0,
+                'message'   => 'Email đã tồn tại',
+            ]);
+        } else {
+            $khachHang = KhachHang::create([
+                'ho_va_ten'     => $request->ho_va_ten,
+                'email'         => $request->email,
+                'password'      => $request->password,
+                'so_dien_thoai' => $request->so_dien_thoai,
+                'ngay_sinh'     => $request->ngay_sinh,
+                'is_active'     => 1,
+            ]);
+            return response()->json([
+                'status'  => 1,
+                'message' => 'Bạn Đăng Ký Tài Khoản  ' . $request->email . '  Thành Công',
+                'key'       => $khachHang->createToKen('key_khach_hang')->plainTextToken,
+            ]);
+        }
     }
     public function loginGoogle(Request $request)
     {
@@ -101,8 +114,8 @@ class KhachHangController extends Controller
         $user = Auth::guard('sanctum')->user();
         if ($user && $user instanceof \App\Models\KhachHang) {
             DB::table('personal_access_tokens')
-                    ->where('id', $user->currentAccessToken()->id)
-                    ->delete();
+                ->where('id', $user->currentAccessToken()->id)
+                ->delete();
             return response()->json([
                 'status'  => 1,
                 'message' => "Đăng xuất thành công",
