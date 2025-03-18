@@ -46,4 +46,6 @@ Route::get('/khach-hang/dang-xuat-all', [KhachHangController::class, 'logOutAll'
 // quán ăn
 Route::post('/quan-an/dang-nhap', [QuanAnController::class, 'Login']);
 Route::post('/quan-an/dang-ky', [QuanAnController::class, 'Register']);
-Route::get('/quan-an/check-token', [QuanAnController::class, 'checkToken']);    
+Route::get('/quan-an/check-token', [QuanAnController::class, 'checkToken']);
+Route::get('/quan-an/dang-xuat', [QuanAnController::class, 'Logout']);
+Route::get('/quan-an/dang-xuat-all', [QuanAnController::class, 'logOutAll']);

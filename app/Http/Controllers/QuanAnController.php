@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\QuanAn;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class QuanAnController extends Controller
@@ -114,5 +115,42 @@ class QuanAnController extends Controller
             'message' => 'Đăng ký tài khoản thành công!',
             'token' => $quan_an->createToken('token_quan_an')->plainTextToken,
         ]);
+    }
+    public function Logout()
+    {
+        $user = Auth::guard('sanctum')->user();
+        if ($user && $user instanceof \App\Models\QuanAn) {
+            DB::table('personal_access_tokens')
+                    ->where('id', $user->currentAccessToken()->id)
+                    ->delete();
+            return response()->json([
+                'status'  => 1,
+                'message' => "Đăng xuất thành công",
+            ]);
+        } else {
+            return response()->json([
+                'status'  => 0,
+                'message' => "Có lỗi xảy ra",
+            ]);
+        }
+    }
+    public function logOutAll()
+    {
+        $user = Auth::guard('sanctum')->user();
+        if ($user && $user instanceof \App\Models\QuanAn) {
+            $ds_token = $user->tokens;
+            foreach ($ds_token as $key => $value) {
+                $value->delete();
+            }
+            return response()->json([
+                'status'  => 1,
+                'message' => "Đăng xuất thành công",
+            ]);
+        } else {
+            return response()->json([
+                'status'  => 0,
+                'message' => "Có lỗi xảy ra",
+            ]);
+        }
     }
 }
