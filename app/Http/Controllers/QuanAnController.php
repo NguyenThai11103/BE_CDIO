@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ThemQuanAnRequest;
 use App\Models\QuanAn;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,8 +19,10 @@ class QuanAnController extends Controller
             'data' => $data
         ]);
     }
-    public function create(Request $request)
+    public function create(ThemQuanAnRequest $request)
     {
+        $login = Auth::guard('sanctum')->user();
+
         QuanAn::create([
             'ten_quan_an' => $request->ten_quan_an,
             'password' => $request->password,
@@ -30,8 +33,6 @@ class QuanAnController extends Controller
             'gio_mo_cua' => $request->gio_mo_cua,
             'gio_dong_cua' => $request->gio_dong_cua,
             'tinh_trang' => $request->tinh_trang,
-
-
         ]);
         return response()->json([
             'status' => true,
@@ -40,6 +41,8 @@ class QuanAnController extends Controller
     }
     public function update(Request $request)
     {
+        $login = Auth::guard('sanctum')->user();
+
         QuanAn::where('id',$request->id)->update([
             'ten_quan_an' => $request->ten_quan_an,
             'password' => $request->password,
@@ -59,6 +62,8 @@ class QuanAnController extends Controller
     }
     public function destroy(Request $request)
     {
+        $login = Auth::guard('sanctum')->user();
+
         QuanAn::where('id',$request->id)->delete();
         return response()->json([
             'status' => true,

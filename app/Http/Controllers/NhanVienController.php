@@ -20,6 +20,8 @@ class NhanVienController extends Controller
 
     public function create(Request $request)
     {
+        $login = Auth::guard('sanctum')->user();
+
         NhanVien::create([
             'ho_va_ten'     => $request->ho_va_ten,
             'email'         => $request->email,
@@ -36,6 +38,8 @@ class NhanVienController extends Controller
 
     public function update(Request $request)
     {
+        $login = Auth::guard('sanctum')->user();
+
         NhanVien::where('id', $request->id)->update([
             'ho_va_ten'     => $request->ho_va_ten,
             'email'         => $request->email,
@@ -52,6 +56,8 @@ class NhanVienController extends Controller
 
     public function destroy(Request $request)
     {
+        $login = Auth::guard('sanctum')->user();
+
         NhanVien::where('id', $request->id)->delete();
         return response()->json([
             'status' => true,
