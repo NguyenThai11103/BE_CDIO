@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\KhachHangDangKyRequest;
+use App\Mail\MasterMail;
 use App\Models\KhachHang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Google_Client;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class KhachHangController extends Controller
 {
@@ -15,8 +17,8 @@ class KhachHangController extends Controller
     public function login(Request $request)
     {
         $check = KhachHang::where('email', $request->email)
-                ->where('password', $request->password)
-                ->first();
+            ->where('password', $request->password)
+            ->first();
         if ($check) {
             return response()->json([
                 'status'    => 1,
@@ -64,10 +66,12 @@ class KhachHangController extends Controller
                 'ngay_sinh'     => $request->ngay_sinh,
                 'is_active'     => 1,
             ]);
+            $data['ho_va_ten']  = $request->ho_va_ten;
+            Mail::to($request->email)->send(new MasterMail('Đăng ký tài khoản', 'dangKy', $data));
             return response()->json([
                 'status'  => 1,
                 'message' => 'Bạn Đăng Ký Tài Khoản  ' . $request->email . '  Thành Công',
-                'key'       => $khachHang->createToKen('key_khach_hang')->plainTextToken,
+
             ]);
         }
     }

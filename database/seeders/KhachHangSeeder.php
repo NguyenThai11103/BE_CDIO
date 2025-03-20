@@ -19,10 +19,19 @@ class KhachHangSeeder extends Seeder
         DB::table('khach_hangs')->insert([
             [
                 'ho_va_ten'     => 'Nguyễn Văn Nhân',
-                'email'         => 'vannhan130504@gmail.com',
+                'email'         => 'khachhang1@gmail.com',
                 'so_dien_thoai' => '0394425076',
                 'password'      => '123456',
                 'ngay_sinh'     => '2004-01-01',
+                'is_active'     => 1,
+                'is_block'      => 0,
+            ],
+            [
+                'ho_va_ten'     => 'Kiều Lương',
+                'email'         => 'khachhang2@gmail.com',
+                'so_dien_thoai' => '0905111222',
+                'password'      => '123456',
+                'ngay_sinh'     => '2003-01-01',
                 'is_active'     => 1,
                 'is_block'      => 0,
             ],
